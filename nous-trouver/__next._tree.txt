@@ -1,0 +1,6 @@
+:HL["/pizza-gusto/_next/static/chunks/3urzdqtorvxkm.css","style"]
+:HL["/pizza-gusto/_next/static/media/28b509d3421c55f0-s.p.3mhro0g6zl0nm.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/pizza-gusto/_next/static/media/52b5d5098cb87ddd-s.p.3r2y_bth_sjsm.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/pizza-gusto/_next/static/media/81cef6a21128489e-s.p.2csanl8cs02r-.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/pizza-gusto/_next/static/media/9e400763522556e5-s.p.40m0sdlh8l0dz.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"nous-trouver","param":null,"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}},"staleTime":300,"buildId":"Knj2hjOYgCHxgCwwRGYaa"}
