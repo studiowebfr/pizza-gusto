@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --noir-ardoise: #0b0c0e;
+  --noir-fumee: #14161a;
+  --or-patine: #b98a48;
+  --or-clair: #e4c08a;
+  --ivoire: #ede7dc;
+  --gris-perle: #8c8880;
+  --braise: #8c4a2f;
+
+  --eyebrow-tracking: 0.28em;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-noir-ardoise: var(--noir-ardoise);
+  --color-noir-fumee: var(--noir-fumee);
+  --color-or-patine: var(--or-patine);
+  --color-or-clair: var(--or-clair);
+  --color-ivoire: var(--ivoire);
+  --color-gris-perle: var(--gris-perle);
+  --color-braise: var(--braise);
+
+  --font-display: var(--font-display);
+  --font-script: var(--font-script);
+  --font-sans: var(--font-utilitaire);
+
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-spin-slow: spin 32s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--noir-ardoise);
+  scroll-behavior: auto;
+  /* `overflow-x: hidden` vit ici, pas sur `body` : posé sur `body`, il
+     force le navigateur à recalculer `overflow-y` en `auto` (règle de la
+     spec CSS Overflow), ce qui transforme `body` en conteneur de scroll
+     indépendant du défilement réel de la page — et casse tout
+     `position: sticky` du site (les éléments ne se figent plus jamais).
+     Sur `html` (la racine), `overflow-x` se propage au viewport sans cet
+     effet de bord. */
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--noir-ardoise);
+  color: var(--ivoire);
+  font-family: var(--font-utilitaire), Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--or-patine);
+  color: var(--noir-ardoise);
+}
+
+.font-display {
+  font-family: var(--font-display), "Times New Roman", serif;
+}
+
+.font-script {
+  font-family: var(--font-script), cursive;
+}
+
+.eyebrow {
+  font-family: var(--font-utilitaire), sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--eyebrow-tracking);
+  font-size: 0.72rem;
+  color: var(--gris-perle);
+  /* `flex` (pas `inline-flex`) : un eyebrow est presque toujours un label
+     autonome sur sa propre ligne (titre de page, bouton retour…). En
+     `inline-flex`, deux eyebrows consécutifs dans le flux du document se
+     retrouvent côte à côte au lieu de s'empiler, et leurs marges
+     verticales sont ignorées. `width: fit-content` évite en retour qu'il
+     s'étire sur toute la largeur du conteneur. */
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--or-patine);
+}
+
+.eyebrow--sans-trait::before {
+  display: none;
+}
+
+.eyebrow--nav {
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  color: var(--ivoire);
+}
+
+.eyebrow--nav::before {
+  width: 18px;
+}
+
+.filet-or {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--or-patine) 15%,
+    var(--or-patine) 85%,
+    transparent
+  );
+}
+
+/* Curseur personnalisé — désactivé sur tactile via (pointer: fine) */
+@media (pointer: fine) {
+  .curseur-actif,
+  .curseur-actif * {
+    cursor: none;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Grain — texture de fond, farine en suspension */
+.grain {
+  /* Pas de `position` ici : cette règle est hors des layers Tailwind, donc
+     elle primerait toujours sur les utilitaires (ex. `absolute` passé par
+     l'appelant). MediaFrame garantit déjà une position non-statique via ses
+     classes Tailwind (`relative` par défaut, remplacé par l'appelant si
+     besoin) — largement suffisant pour ancrer le pseudo-élément ci-dessous. */
+  isolation: isolate;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Focus clavier — visible, en or, jamais supprimé */
+:focus-visible {
+  outline: 2px solid var(--or-clair);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
