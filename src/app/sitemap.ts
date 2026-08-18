@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
 
+// Contenu purement statique (aucune donnée de requête) : nécessaire pour
+// rester compatible avec un export statique (`output: "export"`).
+export const dynamic = "force-static";
+
 const URL_SITE = "https://pizzagusto-besancon.fr";
 
 const PAGES = [

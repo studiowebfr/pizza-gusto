@@ -25,6 +25,16 @@ interface MediaFrameProps {
   children?: React.ReactNode;
 }
 
+// Les <source>/poster d'un <video> sont de simples attributs HTML : ils ne
+// bénéficient pas du préfixage automatique par `basePath`. Et avec
+// `images.unoptimized` (obligatoire pour l'export statique), next/image lui
+// non plus ne préfixe plus rien : sans optimiseur, il retombe sur une
+// simple <img src> brute. D'où ce préfixage manuel commun aux deux.
+// Nécessaire uniquement pour le déploiement statique GitHub Pages (voir
+// next.config.ts) ; vide en production normale (Vercel, racine du domaine).
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const avecBase = (chemin: string) => `${BASE_PATH}${chemin}`;
+
 const DEGRADES: Record<NonNullable<MediaFrameProps["variante"]>, string> = {
   ambre:
     "radial-gradient(circle at 30% 20%, rgba(185,138,72,0.22), transparent 55%), radial-gradient(circle at 75% 80%, rgba(228,192,138,0.12), transparent 50%), var(--noir-fumee)",
@@ -88,7 +98,7 @@ export default function MediaFrame({
     >
       {image && (
         <Image
-          src={image}
+          src={avecBase(image)}
           alt={legende}
           fill
           priority={priority}
@@ -105,12 +115,12 @@ export default function MediaFrame({
           loop
           playsInline
           preload="none"
-          poster={video.poster}
+          poster={avecBase(video.poster)}
         >
           {visible && (
             <>
-              <source src={video.webm} type="video/webm" />
-              <source src={video.mp4} type="video/mp4" />
+              <source src={avecBase(video.webm)} type="video/webm" />
+              <source src={avecBase(video.mp4)} type="video/mp4" />
             </>
           )}
         </video>

@@ -20,17 +20,37 @@ const anciennesUrls: Array<{ source: string; destination: string }> = [
   { source: "/article-est-republicain-3.html", destination: "/le-savoir-faire" },
 ];
 
+// Bascule activée uniquement pour la démo statique GitHub Pages : celle-ci
+// ne peut pas exécuter de serveur (ni redirections, ni /api, ni
+// optimisation d'image à la volée). Le vrai déploiement (Vercel) tourne
+// sans cette variable et garde toutes les fonctionnalités serveur.
+const pourGithubPages = process.env.GITHUB_PAGES === "true";
+const basePath = pourGithubPages ? "/pizza-gusto" : "";
+
 const nextConfig: NextConfig = {
   images: {
     qualities: [75, 90],
+    unoptimized: pourGithubPages,
   },
-  async redirects() {
-    return anciennesUrls.map(({ source, destination }) => ({
-      source,
-      destination,
-      permanent: true,
-    }));
-  },
+  ...(pourGithubPages
+    ? {
+        output: "export" as const,
+        basePath,
+        assetPrefix: basePath,
+        // GitHub Pages sert des fichiers statiques (pas de réécriture
+        // d'URL) : sans le "/" final, les liens vers /la-carte cherchent un
+        // fichier "la-carte" au lieu du dossier "la-carte/index.html".
+        trailingSlash: true,
+      }
+    : {
+        async redirects() {
+          return anciennesUrls.map(({ source, destination }) => ({
+            source,
+            destination,
+            permanent: true,
+          }));
+        },
+      }),
 };
 
 export default nextConfig;
